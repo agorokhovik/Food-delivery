@@ -39,7 +39,7 @@
     });
 
     //Timer
-    const deadline = '2020-07-22';
+    const deadline = '2020-07-23';
     //Функция получает разницу между датами
     function getTimeRemaining(endTime) {
         const t = Date.parse(endTime) - Date.parse(new Date()); // получим кол-во милсек, которые будутв нашем конечно времени
@@ -96,15 +96,18 @@
 
     //Modal
     const modalTrigger = document.querySelectorAll('[data-modal]'),
-            modal = document.querySelector('.modal'),
-            modalCloseBtn = document.querySelector('[data-close]');
+          modal = document.querySelector('.modal'),
+          modalCloseBtn = document.querySelector('[data-close]');
+
+    function openModal() {
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+        document.body.style.overflow ='hidden';
+        clearInterval(modalTimerId);
+    }
     
     modalTrigger.forEach(btn => {
-        btn.addEventListener('click', () => {
-            modal.classList.add('show');
-            modal.classList.remove('hide');
-            document.body.style.overflow ='hidden'; // чтобы не скролилось
-        });
+        btn.addEventListener('click', openModal);
     });
 
     function closeModal() {
@@ -113,7 +116,7 @@
         document.body.style.overflow ='';
     }
 
-    modalCloseBtn.addEventListener('click',closeModal);
+    modalCloseBtn.addEventListener('click', closeModal);
 
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
@@ -126,4 +129,15 @@
             closeModal();
         }
     });
+
+    const modalTimerId = setTimeout(openModal, 5000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
 });
